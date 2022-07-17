@@ -17,6 +17,8 @@ This way of managing the firewall using UFW through a **target state** reduces t
 - ansible-core 2.11+
 - [community.general](https://galaxy.ansible.com/community/general) collection
 - [jc](https://github.com/kellyjonbrazil/jc) on YOUR system: `pip3 install jc`
+- [jmespath](https://github.com/jmespath/jmespath.py) on YOUR system: `pip3 install jmespath`
+- [netaddr](https://pypi.org/project/netaddr/) on YOUR system: `pip3 install netaddr`
 - Packages that must be present on the target system:
   - ufw
 

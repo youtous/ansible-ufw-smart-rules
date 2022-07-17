@@ -1,3 +1,34 @@
 ---
+- name: Ensure that ufw_rule_parameters does not contain extra parameters 
+  ansible.builtin.assert:
+    that: >
+      (ufw_rule_parameters | json_query('keys(@)') | difference(ufw_smart_rules_supported_parameters_attributes)) == []
+    msg: "ufw_rule_parameters contains not allowed attributes: {{ (ufw_rule_parameters | json_query('keys(@)') | difference(ufw_smart_rules_supported_parameters_attributes)) }}"
 
+- name: List existing UFW rules
+  ansible.builtin.command: ufw status numbered
+  register: ufw_status_numbered
+  changed_when: false
+
+- name: Select existing rules matching target rule
+  ansible.builtin.set_fact:
+    ufw_rules: "{{ ufw_status_numbered.stdout | community.general.jc('ufw') }}"
+    matching_rules_query: "'rules[?{{ lookup('ansible.builtin.template', './templates/query.j2') | trim | regex_replace('&&$', '') }}].index'"
+
+- name: Debug rules 
+  ansible.builtin.debug:
+    msg: "{{ ufw_rules }}"
+
+- name: Debug query
+  ansible.builtin.debug:
+    msg: "{{ matching_rules_query }}"
+
+- name: Select existing rules matching target rule
+  ansible.builtin.set_fact:
+    matched_rules: "{{ ufw_rules | community.general.json_query(matching_rules_query)  }}"
+
+
+- name: Debug result
+  ansible.builtin.debug:
+    msg: "{{ matched_rules }}"
 ...

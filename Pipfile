@@ -8,6 +8,8 @@ ansible = "*"
 ansible-lint = "*"
 jc = "*"
 molecule = {extras = ["docker"], version = "*"}
+jmespath = "*"
+netaddr = "*"
 
 [dev-packages]
 
