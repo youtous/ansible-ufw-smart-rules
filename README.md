@@ -3,6 +3,8 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Licence](https://img.shields.io/github/license/youtous/ansible-ufw-smart-rules)](https://github.com/youtous/ansible-ufw-smart-rules/blob/master/LICENSE)
 
+# THIS ROLE IS STILL IN DEVELOPMENT, DO NOT USE IN PRODUCTION
+
 Manage **ufw** firewall using a single target state and reconcile the existing one.
 
 It works by:
