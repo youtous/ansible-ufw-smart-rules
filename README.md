@@ -3,6 +3,8 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Licence](https://img.shields.io/github/license/youtous/ansible-ufw-smart-rules)](https://github.com/youtous/ansible-ufw-smart-rules/blob/master/LICENSE)
 
+# THIS ROLE IS STILL IN DEVELOPMENT, DO NOT USE IN PRODUCTION
+
 Manage **ufw** firewall using a single target state and reconcile the existing one.
 
 It works by:
@@ -17,6 +19,8 @@ This way of managing the firewall using UFW through a **target state** reduces t
 - ansible-core 2.11+
 - [community.general](https://galaxy.ansible.com/community/general) collection
 - [jc](https://github.com/kellyjonbrazil/jc) on YOUR system: `pip3 install jc`
+- [jmespath](https://github.com/jmespath/jmespath.py) on YOUR system: `pip3 install jmespath`
+- [netaddr](https://pypi.org/project/netaddr/) on YOUR system: `pip3 install netaddr`
 - Packages that must be present on the target system:
   - ufw
 
