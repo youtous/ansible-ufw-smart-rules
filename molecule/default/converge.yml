@@ -120,5 +120,8 @@
           rule: "allow"
         ufw_rule_from_ips:
           - "172.16.0.0/12" # an allowed source to access
+          - "8.5.5.6" # an allowed source to access
 
+
+# TODO : test with ip and with subnets 
 ...

@@ -10,7 +10,6 @@
 #   comment: 
 #   direction:
   
-#   from_ip:
 #   from_port:
   
 #   interface:
@@ -77,4 +76,6 @@ ufw_rule_matching_query_template: >
 
   {% if ufw_rule_parameters.proto is defined %}to_transport == `{{ ufw_rule_parameters.proto }}` && {% endif %}
 
+# display some additionnal ufw information for debugging
+ufw_smart_display_states: true
 ...
