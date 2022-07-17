@@ -2,8 +2,8 @@
 - name: Ensure that ufw_rule_parameters does not contain extra parameters 
   ansible.builtin.assert:
     that: >
-      (ufw_rule_parameters | json_query('keys(@)') | difference(ufw_smart_rules_supported_parameters_attributes)) == []
-    msg: "ufw_rule_parameters contains not allowed attributes: {{ (ufw_rule_parameters | json_query('keys(@)') | difference(ufw_smart_rules_supported_parameters_attributes)) }}"
+      (ufw_rule_parameters | community.general.json_query('keys(@)') | difference(ufw_smart_rules_supported_parameters_attributes)) == []
+    msg: "ufw_rule_parameters contains not allowed attributes: {{ (ufw_rule_parameters | community.general.json_query('keys(@)') | difference(ufw_smart_rules_supported_parameters_attributes)) }}"
 
 - name: List existing UFW rules
   ansible.builtin.command: ufw status numbered
