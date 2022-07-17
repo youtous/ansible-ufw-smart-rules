@@ -1,0 +1,41 @@
+---
+galaxy_info:
+  role_name: ufw_smart_rules
+  author: youtous
+  description: Manage ufw firewall using a single target state and reconcile the existing one
+  company: none
+  license: MIT
+  min_ansible_version: "2.11"
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: GenericUNIX
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: opensuse
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: SLES
+      versions:
+        - all
+    - name: GenericLinux
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - ufw
+    - firewall
+    - deployment
+    - management
+
+dependencies: []
+...
