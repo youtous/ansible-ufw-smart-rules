@@ -44,9 +44,11 @@ Installation from [ansible galaxy](https://galaxy.ansible.com/youtous/ufw_smart_
   ansible.builtin.include_role:
     name: youtous.ufw_smart_rules
   vars:
+    ufw_rule_parameters:
+      to_port: "80"
+      rule: "allow"
     ufw_rules_criteria: from_ips
     ufw_rule_from_ips: [127.0.0.2, 127.0.0.3] # ufw module implementation of from_ip
-    from_port: 80
 ```
 
 - Outgoing filter:
@@ -55,9 +57,12 @@ Installation from [ansible galaxy](https://galaxy.ansible.com/youtous/ufw_smart_
   ansible.builtin.include_role:
     name: youtous.ufw_smart_rules
   vars:
+    ufw_rule_parameters:
+      to_port: "80"
+      rule: "allow"
+      direction: out
     ufw_rules_criteria: to_ips
     ufw_rule_to_ips: [10.1.3.63, 10.2.35.21] # ufw module implementation of to_ip
-    to_port: 80
 ```
 
 ### License

@@ -29,14 +29,14 @@ ufw_rule_parameters: {}
 
 
 # criteria to loop_on and check diff between current and target state
-# can either be `from_ip` or `to_ip`
-ufw_rules_criteria: "from_ip"
+# can either be `from_ips` or `to_ips`
+ufw_rules_criteria: "from_ips"
 
-# when ufw_rules_criteria == from_ip otherwise must be empty
+# when ufw_rules_criteria == from_ips otherwise must be empty
 # list of (src) from_ip for the rule, any ip not listed in the list will be removed from the firewall
 ufw_rule_from_ips: []
 
-# when ufw_rules_criteria == to_ip otherwise must be empty
+# when ufw_rules_criteria == to_ips otherwise must be empty
 # list of dest_ip for the the, any ip not listed in the list will be removed from the firewall
 ufw_rule_to_ips: []
 
@@ -83,12 +83,12 @@ ufw_rule_matching_query_template: >
   {% endif %}
   {% endif %}
 
-  {% if ufw_rules_criteria ==  'from_ip' and ufw_rule_parameters.to_ip is defined %}
+  {% if ufw_rules_criteria ==  'from_ips' and ufw_rule_parameters.to_ip is defined %}
   to_ip == `{{ ufw_rule_parameters.to_ip | ansible.utils.ipaddr('address') }}` &&
   to_ip_prefix == `{{ ufw_rule_parameters.to_ip | ansible.utils.ipaddr('prefix') }}` &&
   {% endif %}
 
-  {% if ufw_rules_criteria ==  'to_ip' and ufw_rule_parameters.from_ip is defined %}
+  {% if ufw_rules_criteria ==  'to_ips' and ufw_rule_parameters.from_ip is defined %}
   from_ip == `{{ ufw_rule_parameters.from_ip | ansible.utils.ipaddr('address') }}` &&
   from_ip_prefix == `{{ ufw_rule_parameters.from_ip | ansible.utils.ipaddr('prefix') }}` &&
   {% endif %}

@@ -1,0 +1,21 @@
+TODO: tests that must be implemented
+- test with no existing rule - in : OK
+- test with no existing rule - out
+- test with existing rule are deleted - in
+- test with existing rule are deleted - out
+- test with existing rule are deleted and no delete - in
+- test with existing rule are deleted and no delete - in
+- test with port range with rules delete - in
+- test with port range with rules delete - out
+- test with port range with rules delete and no delete - in
+- test with port range with rules delete and no delete - out
+- test with port range with rules delete and no delete - in
+- test with port and proto - in
+- test with port and proto - out
+- test with port and proto to delete and no delete - in
+- test with port and proto to delete and no delete - out
+- test with port and comment to delete and no delete - in
+- test with port and comment to delete and no delete - out
+- test with port and subnet - in
+- test with port and subnet - out
+- test nothing changed by default

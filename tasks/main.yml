@@ -7,14 +7,14 @@
 
 - name: Ensure that ufw_rules_criteria is valid
   ansible.builtin.assert:
-    that: ufw_rules_criteria in ['from_ip', 'to_ip']
-    msg: "ufw_rules_criteria must either be from_ip or to_ip, current value: {{ ufw_rules_criteria }}"
+    that: ufw_rules_criteria in ['from_ips', 'to_ips']
+    msg: "ufw_rules_criteria must either be from_ips or to_ips, current value: {{ ufw_rules_criteria }}"
 
-- name: Ensure that ufw_rule_from_ips is empty when ufw_rules_criteria==to_ip
+- name: Ensure ufw_rules_criteria correctness
   ansible.builtin.assert:
-    that: (ufw_rules_criteria == 'to_ip' and ufw_rule_from_ips | length == 0) or
-          (ufw_rules_criteria == 'from_ip' and ufw_rule_to_ips | length == 0)
-    msg: "when ufw_rules_criteria={{ ufw_rules_criteria }}, {{ 'ufw_rule_from_ips' if (ufw_rules_criteria == 'to_ip') else 'ufw_rule_to_ips'}} must be empty"
+    that: (ufw_rules_criteria == 'to_ips' and ufw_rule_from_ips | length == 0) or
+          (ufw_rules_criteria == 'from_ips' and ufw_rule_to_ips | length == 0)
+    msg: "when ufw_rules_criteria={{ ufw_rules_criteria }}, {{ 'ufw_rule_from_ips' if (ufw_rules_criteria == 'to_ips') else 'ufw_rule_to_ips'}} must be empty"
 
 - name: List existing UFW rules
   ansible.builtin.command: ufw status numbered
