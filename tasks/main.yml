@@ -1,9 +1,20 @@
 ---
-- name: Ensure that ufw_rule_parameters does not contain extra parameters 
+- name: Ensure that ufw_rule_parameters does not contain extra parameters
   ansible.builtin.assert:
     that: >
       (ufw_rule_parameters | community.general.json_query('keys(@)') | difference(ufw_smart_rules_supported_parameters_attributes)) == []
     msg: "ufw_rule_parameters contains not allowed attributes: {{ (ufw_rule_parameters | community.general.json_query('keys(@)') | difference(ufw_smart_rules_supported_parameters_attributes)) }}"
+
+- name: Ensure that ufw_rules_criteria is valid
+  ansible.builtin.assert:
+    that: ufw_rules_criteria in ['from_ip', 'to_ip']
+    msg: "ufw_rules_criteria must either be from_ip or to_ip, current value: {{ ufw_rules_criteria }}"
+
+- name: Ensure that ufw_rule_from_ips is empty when ufw_rules_criteria==to_ip
+  ansible.builtin.assert:
+    that: (ufw_rules_criteria == 'to_ip' and ufw_rule_from_ips | length == 0) or
+          (ufw_rules_criteria == 'from_ip' and ufw_rule_to_ips | length == 0)
+    msg: "when ufw_rules_criteria={{ ufw_rules_criteria }}, {{ 'ufw_rule_from_ips' if (ufw_rules_criteria == 'to_ip') else 'ufw_rule_to_ips'}} must be empty"
 
 - name: List existing UFW rules
   ansible.builtin.command: ufw status numbered
@@ -15,7 +26,7 @@
     ufw_rules: "{{ ufw_status_numbered.stdout | community.general.jc('ufw') }}"
     matching_rules_query: "rules[?{{ lookup('ansible.builtin.template', './templates/query.j2') | trim | regex_replace('&&$', '') }}]"
     # also perform a transformation on the allowed ips to enable standard notation manipulation
-    ufw_rule_from_ips_std: "{{ ufw_rule_from_ips | map('ansible.utils.ipaddr', 'network/prefix') }}"
+    ufw_rule_target_ips_std: "{{ (ufw_rule_from_ips if (ufw_rules_criteria == 'from_ips') else ufw_rule_to_ips) | map('ansible.utils.ipaddr', 'network/prefix') }}"
 
 - name: Display ufw state
   ansible.builtin.debug:
@@ -28,12 +39,17 @@
   when: ufw_smart_display_states | default(true)
 
 
-- name: Match eligible ufw rules from current state 
+- name: Match eligible ufw rules from current state
   ansible.builtin.set_fact:
     matched_rules: "{{ ufw_rules | community.general.json_query(matching_rules_query)  }}"
-    query_ordered_rules: "[*].{index: index, ip_std: join(`/`, [from_ip, to_string(from_ip_prefix)])} | sort_by(@, &index) | reverse(@)"
-    query_ips_to_implement: "[*].join(`/`, [from_ip, to_string(from_ip_prefix)])"
-
+    query_ordered_rules: "[*].{index: index, ip_std: join(`/`, [
+                                                                {{ 'from_ip' if (ufw_rules_criteria == 'from_ips') else 'to_ip' }},
+                                                                to_string({{ 'from_ip_prefix' if (ufw_rules_criteria == 'from_ips') else 'to_ip_prefix' }})
+                                                                ])} | sort_by(@, &index) | reverse(@)"
+    query_ips_to_implement: "[*].join(`/`, [
+                                            {{ 'from_ip' if (ufw_rules_criteria == 'from_ips') else 'to_ip' }},
+                                            to_string({{ 'from_ip_prefix' if (ufw_rules_criteria == 'from_ips') else 'to_ip_prefix' }})
+                                            ])"
 
 - name: Display macthed rules
   ansible.builtin.debug:
@@ -43,13 +59,13 @@
 - name: Compute target ufw rules transformations
   ansible.builtin.set_fact:
     # all the rules but with a std ip format (network/prefix) and ordered from greater index to smaller
-    ordered_potential_delete_rules: "{{ 
-      matched_rules | 
+    ordered_potential_delete_rules: "{{
+      matched_rules |
       community.general.json_query(query_ordered_rules)
       }}"
     # ips to implement but not listed in the current rules
     ips_to_implement: "{{
-        ufw_rule_from_ips_std | difference(matched_rules | community.general.json_query(query_ips_to_implement))
+        ufw_rule_target_ips_std | difference(matched_rules | community.general.json_query(query_ips_to_implement))
       }}"
 
 - name: Display all matched rules sorted (big index first to avoid conflicts)
@@ -64,10 +80,10 @@
 
 - name: "UFW delete out of new definition rules"
   ansible.builtin.command: "ufw --force delete {{ item.index }}"
-  when: item.ip_std not in ufw_rule_from_ips_std
+  when: item.ip_std not in ufw_rule_target_ips_std
   with_items: "{{ ordered_potential_delete_rules }}"
 
-- name: "UFW add rules missing from the new definition"
+- name: "UFW add rules missing from the new definition - criteria={{ ufw_rules_criteria }}"
   community.general.ufw:
     comment: "{{ ufw_rule_parameters.comment | default(omit) }}"
     direction: "{{ ufw_rule_parameters.direction | default(omit) }}"
@@ -76,8 +92,8 @@
     proto: "{{ ufw_rule_parameters.proto | default(omit) }}"
     route: "{{ ufw_rule_parameters.route | default(omit) }}"
     rule: "{{ ufw_rule_parameters.rule | default(omit) }}"
-    to_ip: "{{ ufw_rule_parameters.to_ip | default(omit) }}"
     to_port: "{{ ufw_rule_parameters.to_port | default(omit) }}"
-    from_ip: "{{ item }}"
+    to_ip: "{{ (item if (ufw_rules_criteria == 'to_ips') else ufw_rule_parameters.to_ip) | default(omit) }}"
+    from_ip: "{{ (item if (ufw_rules_criteria == 'from_ips') else ufw_rule_parameters.from_ip) | default(omit) }}"
   with_items: "{{ ips_to_implement }}"
 ...

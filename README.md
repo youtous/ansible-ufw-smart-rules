@@ -10,11 +10,19 @@
 Manage **ufw** firewall using a single target state and reconcile the existing one.
 
 It works by:
-  - scanning the **current state** of the rules for a given desired set of rules, 
+  - scanning the **current state** of the rules for a given desired set of rules,
   - remove the existing rules not matching the **target state**,
   - add the rules not already present in the **current state**.
 
 This way of managing the firewall using UFW through a **target state** reduces the complexity of the firewall management by implementing a single desired state without dealing with the existing rules.
+
+This role supports either looping on:
+  - **Incoming** connections filter (`from_ips`)
+    set `ufw_rules_criteria: from_ips` then list the allowed sources using `ufw_rule_from_ips: []`
+  - **Outgoing** connections filter (`to_ips`)
+    set `ufw_rules_criteria: to_ips` then list the allowed destinations using `ufw_rule_to_ips: []`
+
+You can combine, incoming and outgoing filters by including this role twice.
 
 ### Requirements
 
@@ -30,11 +38,26 @@ This way of managing the firewall using UFW through a **target state** reduces t
 
 Installation from [ansible galaxy](https://galaxy.ansible.com/youtous/ufw_smart_rules): `ansible-galaxy install youtous.ufw_smart_rules`
 
+- Incoming filter:
 ```yaml
-- name: docker prune secrets and configs
+- name: Implement an incoming filter on port 80, ensure only allowed ips can reach the service
   ansible.builtin.include_role:
     name: youtous.ufw_smart_rules
   vars:
+    ufw_rules_criteria: from_ips
+    ufw_rule_from_ips: [127.0.0.2, 127.0.0.3] # ufw module implementation of from_ip
+    from_port: 80
+```
+
+- Outgoing filter:
+```yaml
+- name: Implement an outgoing filter on port 80, ensure only allowed ips can be reached
+  ansible.builtin.include_role:
+    name: youtous.ufw_smart_rules
+  vars:
+    ufw_rules_criteria: to_ips
+    ufw_rule_to_ips: [10.1.3.63, 10.2.35.21] # ufw module implementation of to_ip
+    to_port: 80
 ```
 
 ### License
