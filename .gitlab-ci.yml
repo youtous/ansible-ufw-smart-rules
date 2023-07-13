@@ -13,11 +13,13 @@ services:
 lint:
   image: python:latest
   stage: test
+  variables:
+    PIP_IGNORE_INSTALLED: '1'
   before_script:
     - pip install pipenv
     - pipenv install
   script:
-    - (test -f requirements.yml && ansible-galaxy install -r requirements.yml) || echo requirements.yml does not exist, skipping step
+    - (test -f requirements.yml && pipenv run ansible-galaxy install -r requirements.yml) || echo requirements.yml does not exist, skipping step
     - pipenv run pre-commit run --all-files --show-diff-on-failure
 
 tests-molecule:
@@ -26,6 +28,7 @@ tests-molecule:
   variables:
     PY_COLORS: '1'
     ANSIBLE_FORCE_COLOR: '1'
+    PIP_IGNORE_INSTALLED: '1'
   parallel:
     matrix:
       - MOLECULE_DISTRO:
