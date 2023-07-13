@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 ansible = "*"
 ansible-lint = "*"
+pre-commit = "*"
+black = "*"
 jc = "*"
 molecule = {extras = ["docker"], version = "*"}
 molecule-plugins = {extras = ["docker"], version = "*"}
