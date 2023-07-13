@@ -23,7 +23,7 @@ lint:
     - pipenv run pre-commit run --all-files --show-diff-on-failure
 
 tests-molecule:
-  image: docker:stable-dind
+  image: docker:dind
   stage: test
   variables:
     PY_COLORS: '1'
