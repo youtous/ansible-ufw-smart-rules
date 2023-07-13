@@ -23,7 +23,7 @@
 
 - name: Retrieve ufw state and build query based on ufw_rule_matching_query_template
   ansible.builtin.set_fact:
-    ufw_rules: "{{ ufw_status_numbered.stdout | community.general.jc('ufw') }}"
+    ufw_rules: "{{ ufw_status_numbered.stdout | default('') | community.general.jc('ufw') }}"
     matching_rules_query: "rules[?{{ lookup('ansible.builtin.template', './templates/query.j2') | trim | regex_replace('&&$', '') }}]"
     # also perform a transformation on the allowed ips to enable standard notation manipulation
     ufw_rule_target_ips_std: "{{ (ufw_rule_from_ips if (ufw_rules_criteria == 'from_ips') else ufw_rule_to_ips) | map('ansible.utils.ipaddr', 'network/prefix') }}"
@@ -41,7 +41,7 @@
 
 - name: Match eligible ufw rules from current state
   ansible.builtin.set_fact:
-    matched_rules: "{{ ufw_rules | community.general.json_query(matching_rules_query)  }}"
+    matched_rules: "{{ ufw_rules | community.general.json_query(matching_rules_query) }}"
     query_ordered_rules: "[*].{index: index, ip_std: join(`/`, [
                                                                 {{ 'from_ip' if (ufw_rules_criteria == 'from_ips') else 'to_ip' }},
                                                                 to_string({{ 'from_ip_prefix' if (ufw_rules_criteria == 'from_ips') else 'to_ip_prefix' }})
@@ -78,7 +78,7 @@
     msg: "{{ ips_to_implement }}"
   when: ufw_smart_display_states | default(true)
 
-- name: "UFW delete out of new definition rules"
+- name: "UFW delete out of new definition rules" # noqa: no-changed-when
   ansible.builtin.command: "ufw --force delete {{ item.index }}"
   when: item.ip_std not in ufw_rule_target_ips_std
   with_items: "{{ ordered_potential_delete_rules }}"

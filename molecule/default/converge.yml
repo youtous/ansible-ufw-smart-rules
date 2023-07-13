@@ -68,7 +68,7 @@
         rule: allow
         port: 60000:61000
         proto: tcp
-        route:
+        route: false
 
     - name: Create a allow rule with protocol any (to ignore)
       community.general.ufw:

@@ -8,10 +8,8 @@ ansible = "*"
 ansible-lint = "*"
 jc = "*"
 molecule = {extras = ["docker"], version = "*"}
+molecule-plugins = {extras = ["docker"], version = "*"}
 jmespath = "*"
 netaddr = "*"
 
 [dev-packages]
-
-[requires]
-python_version = "3.10"
