@@ -29,6 +29,7 @@ tests-molecule:
     PY_COLORS: '1'
     ANSIBLE_FORCE_COLOR: '1'
     PIP_IGNORE_INSTALLED: '1'
+    ANSIBLE_REMOTE_TMP: "/tmp"
   parallel:
     matrix:
       - MOLECULE_DISTRO:
