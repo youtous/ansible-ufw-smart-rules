@@ -1,0 +1,148 @@
+---
+- name: Converge
+  hosts: all
+  pre_tasks:
+    - name: Update apt cache.
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_os_family == 'Debian'
+
+    - name: Wait for systemd to complete initialization.  # noqa 303
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+  vars:
+
+  tasks:
+    - name: Install required packages
+      ansible.builtin.package:
+        name:
+          - ufw
+        state: present
+
+    - name: Enable ufw
+      community.general.ufw:
+        state: enabled
+
+
+    - name: Create rules that should not be deleted
+      ansible.builtin.include_role:
+        name: youtous.ufw_smart_rules
+      vars:
+        ufw_rule_parameters:
+          to_port: "60000:61000"
+          rule: "allow"
+          proto: "tcp"
+        ufw_rules_criteria: from_ips
+        ufw_rule_from_ips:
+          - "8.5.5.6" # an allowed source to access
+
+    - name: Create rules that should be deleted
+      community.general.ufw:
+        rule: allow
+        direction: in
+        proto: tcp
+        from_ip: 1.2.3.5
+        to_port: '60000:61000'
+
+    - name: List existing UFW rules
+      ansible.builtin.command: ufw status numbered
+      register: ufw_status
+      changed_when: false
+
+    - name: Retrieve ufw state and set expected state
+      ansible.builtin.set_fact:
+        ufw_rules: "{{ ufw_status.stdout | community.general.jc('ufw') }}"
+        ufw_rules_expected:  
+            [
+            {
+                "action": "ALLOW",
+                "action_direction": "IN",
+                "comment": null,
+                "from_interface": "any",
+                "from_ip": "8.5.5.6",
+                "from_ip_prefix": 32,
+                "from_port_ranges": [
+                    {
+                        "end": 65535,
+                        "start": 0
+                    }
+                ],
+                "from_service": null,
+                "from_transport": "any",
+                "index": 1,
+                "network_protocol": "ipv4",
+                "to_interface": "any",
+                "to_ip": "0.0.0.0",
+                "to_ip_prefix": 0,
+                "to_port_ranges": [
+                    {
+                        "end": 61000,
+                        "start": 60000
+                    }
+                ],
+                "to_service": null,
+                "to_transport": "tcp"
+            },
+            {
+                "action": "ALLOW",
+                "action_direction": "IN",
+                "comment": null,
+                "from_interface": "any",
+                "from_ip": "1.2.3.5",
+                "from_ip_prefix": 32,
+                "from_port_ranges": [
+                    {
+                        "end": 65535,
+                        "start": 0
+                    }
+                ],
+                "from_service": null,
+                "from_transport": "any",
+                "index": 2,
+                "network_protocol": "ipv4",
+                "to_interface": "any",
+                "to_ip": "0.0.0.0",
+                "to_ip_prefix": 0,
+                "to_port_ranges": [
+                    {
+                        "end": 61000,
+                        "start": 60000
+                    }
+                ],
+                "to_service": null,
+                "to_transport": "tcp"
+            }
+        ]
+
+    - name: Display ufw state
+      ansible.builtin.debug:
+        msg: "{{ ufw_rules.rules }}"
+
+    - name: Ensure no difference in expected and current state
+      ansible.builtin.assert:
+        that: "(ufw_rules.rules | difference(ufw_rules_expected)) == []"
+        msg: "Failed difference: {{ (ufw_rules.rules | difference(ufw_rules_expected)) }}"
+
+
+    - name: Allow access to port range only for a given set of IN ips
+      ansible.builtin.include_role:
+        name: youtous.ufw_smart_rules
+      vars:
+        ufw_rule_parameters:
+          to_port: "60000:61000"
+          rule: "allow"
+          proto: "tcp"
+        ufw_rules_criteria: from_ips
+        ufw_rule_from_ips:
+          - "172.16.0.0/12" # an allowed source to access
+          - "8.5.5.6" # an allowed source to access
+...
