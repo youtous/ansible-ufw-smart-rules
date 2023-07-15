@@ -1,6 +1,6 @@
 ---
 ufw_smart_rules_supported_parameters_attributes:
-  - comment 
+  - comment
   - direction
   - from_ip
   - from_port

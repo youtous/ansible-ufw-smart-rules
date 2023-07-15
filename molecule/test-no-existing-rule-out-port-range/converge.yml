@@ -1,0 +1,48 @@
+---
+- name: Converge
+  hosts: all
+  pre_tasks:
+    - name: Update apt cache.
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_os_family == 'Debian'
+
+    - name: Wait for systemd to complete initialization.  # noqa 303
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+  vars:
+
+  tasks:
+    - name: Install required packages
+      ansible.builtin.package:
+        name:
+          - ufw
+        state: present
+
+    - name: Enable ufw
+      community.general.ufw:
+        state: enabled
+
+    - name: Allow access to port range only for a given set of OUT ips
+      ansible.builtin.include_role:
+        name: youtous.ufw_smart_rules
+      vars:
+        ufw_rule_parameters:
+          to_port: "60000:61000"
+          rule: "allow"
+          proto: "tcp"
+          direction: out
+        ufw_rules_criteria: to_ips
+        ufw_rule_to_ips:
+          - "172.16.0.0/12" # an allowed source to access
+          - "8.5.5.6" # an allowed source to access
+...
