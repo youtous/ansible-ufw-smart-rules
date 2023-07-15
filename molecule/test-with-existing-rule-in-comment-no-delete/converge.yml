@@ -2,7 +2,6 @@
 # Test case : the rule already exists therefore should not be deleted + a rule that should be deleted
 - name: Converge
   hosts: all
-  become: true
   pre_tasks:
     - name: Update apt cache.
       ansible.builtin.apt:

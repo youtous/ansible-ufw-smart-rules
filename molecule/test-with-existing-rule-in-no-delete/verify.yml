@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: false
   vars:
-  become: true
+
   tasks:
     - name: List existing UFW rules
       ansible.builtin.command: ufw status numbered
