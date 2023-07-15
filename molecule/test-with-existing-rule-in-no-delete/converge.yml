@@ -61,7 +61,7 @@
     - name: Retrieve ufw state and set expected state
       ansible.builtin.set_fact:
         ufw_rules: "{{ ufw_status.stdout | community.general.jc('ufw') }}"
-        ufw_rules_expected:  
+        ufw_rules_expected:
             [
             {
                 "action": "ALLOW",
