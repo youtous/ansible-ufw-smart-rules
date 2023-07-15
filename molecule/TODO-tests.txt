@@ -7,10 +7,10 @@ TODO: tests that must be implemented
 - test with existing rule are deleted and no delete - out : OK
 - test with port range with rules delete - in : OK
 - test with port range with rules delete - out : OK
+- test with port and proto - in : OK
+- test with port and proto - out : OK
 - test with port range with rules delete and no delete - in
 - test with port range with rules delete and no delete - out
-- test with port and proto - in
-- test with port and proto - out
 - test with port and proto to delete and no delete - in
 - test with port and proto to delete and no delete - out
 - test with port and comment to delete and no delete - in
