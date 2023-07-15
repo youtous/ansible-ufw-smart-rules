@@ -9,7 +9,7 @@ ansible-lint = "*"
 pre-commit = "*"
 black = "*"
 jc = "*"
-molecule = {extras = ["docker"], version = "*"}
+molecule = "*"
 molecule-plugins = {extras = ["docker"], version = "*"}
 jmespath = "*"
 netaddr = "*"

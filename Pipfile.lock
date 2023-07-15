@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "061b9d8d0eafd2a916f201f78e768276bc68f860466c5e187da6c2122393c666"
+            "sha256": "c24e62ffa430f48d828b62254860e3771375b24075a8990211ea1671548b00c1"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -281,11 +281,11 @@
         },
         "click": {
             "hashes": [
-                "sha256:2739815aaa5d2c986a88f1e9230c55e17f0caad3d958a5e13ad0797c166db9e3",
-                "sha256:b97d0c74955da062a7d4ef92fadb583806a585b2ea81958a81bd72726cbb8e37"
+                "sha256:4be4b1af8d665c6d942909916d31a213a106800c47d0eeba73d34da3cbc11367",
+                "sha256:e576aa487d679441d7d30abb87e1b43d24fc53bffb8758443b1a9e1cee504548"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==8.1.4"
+            "version": "==8.1.5"
         },
         "click-help-colors": {
             "hashes": [
@@ -411,11 +411,11 @@
         },
         "jsonschema": {
             "hashes": [
-                "sha256:159fdff1443b4c5ed900d4eeac6b928a3485f4aff5fba6edd1e25cd66bb46b39",
-                "sha256:af3855bfa30e83b2200a5fe12ab5eb92460e4d3b8e4efd34094aa637f7272a87"
+                "sha256:64b7104d72efe856bea49ca4af37a14a9eba31b40bb7238179f3803130fd34d9",
+                "sha256:aab78b34c2de001c6b692232f08c21a97b436fe18e0b817bf0511046924fceef"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==4.18.2"
+            "version": "==4.18.3"
         },
         "jsonschema-specifications": {
             "hashes": [
@@ -498,9 +498,7 @@
             "version": "==0.1.2"
         },
         "molecule": {
-            "extras": [
-                "docker"
-            ],
+            "extras": [],
             "hashes": [
                 "sha256:09f9f33d172b405abd762e2de9557c61160d14691a5bb82e36adbdbe47ba0133",
                 "sha256:fa7af89fdf9317539c3eca99cb1e5e7522d7a57e0b67f5b698e44276f98d9d82"
@@ -893,11 +891,11 @@
         },
         "virtualenv": {
             "hashes": [
-                "sha256:34da10f14fea9be20e0fd7f04aba9732f84e593dac291b757ce42e3368a39419",
-                "sha256:8ff19a38c1021c742148edc4f81cb43d7f8c6816d2ede2ab72af5b84c749ade1"
+                "sha256:18d1b37fc75cc2670625702d76849a91ebd383768b4e91382a8d51be3246049e",
+                "sha256:e2a7cef9da880d693b933db7654367754f14e20650dc60e8ee7385571f8593a3"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==20.23.1"
+            "version": "==20.24.0"
         },
         "wcmatch": {
             "hashes": [

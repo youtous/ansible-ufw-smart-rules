@@ -51,7 +51,7 @@ tests-molecule:
     - pipenv run ansible --version
     - pipenv run molecule --version
   script:
-    - pipenv run molecule test
+    - pipenv run molecule test --all --parallel
 
 release:
   stage: release
