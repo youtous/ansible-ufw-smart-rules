@@ -5,8 +5,6 @@
 [![Gitlab Repo](https://img.shields.io/badge/gitlab.com%2Fyoutous%2Fansible--ufw--smart--rules?label=✨%20youtous%2Fansible-ufw-smart-rules&style=social&logo=gitlab)](https://gitlab.com/youtous/ansible-ufw-smart-rules/)
 [![Licence](https://img.shields.io/github/license/youtous/ansible-ufw-smart-rules)](https://github.com/youtous/ansible-ufw-smart-rules/blob/master/LICENSE)
 
-# THIS ROLE IS STILL IN DEVELOPMENT, DO NOT USE IN PRODUCTION
-
 Manage **ufw** firewall using a single target state and reconcile the existing one.
 
 It works by:
