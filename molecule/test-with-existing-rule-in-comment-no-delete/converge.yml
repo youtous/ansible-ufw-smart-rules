@@ -1,4 +1,5 @@
 ---
+# Test case : the rule already exists therefore should not be deleted + a rule that should be deleted
 - name: Converge
   hosts: all
   pre_tasks:
@@ -32,26 +33,26 @@
       community.general.ufw:
         state: enabled
 
-
     - name: Create rules that should not be deleted
       ansible.builtin.include_role:
         name: youtous.ufw_smart_rules
       vars:
         ufw_rule_parameters:
-          to_port: "60000:61000"
+          to_port: "2020"
           rule: "allow"
-          proto: "tcp"
+          direction: in
+          comment: "Expected comment"
         ufw_rules_criteria: from_ips
         ufw_rule_from_ips:
           - "8.5.5.6" # an allowed source to access
 
-    - name: Create rules that should be deleted
+    - name: Create rules that WILL NOT be deleted (comment is not matching but ip is allowed, 2 rules will be created)
       community.general.ufw:
         rule: allow
         direction: in
-        proto: tcp
+        proto: udp
         from_ip: 1.2.3.5
-        to_port: '60000:61000'
+        to_port: '2020'
 
     - name: List existing UFW rules
       ansible.builtin.command: ufw status numbered
@@ -62,11 +63,11 @@
       ansible.builtin.set_fact:
         ufw_rules: "{{ ufw_status.stdout | community.general.jc('ufw') }}"
         ufw_rules_expected:
-            [
+          [
             {
                 "action": "ALLOW",
                 "action_direction": "IN",
-                "comment": null,
+                "comment": "Expected comment",
                 "from_interface": "any",
                 "from_ip": "8.5.5.6",
                 "from_ip_prefix": 32,
@@ -83,14 +84,11 @@
                 "to_interface": "any",
                 "to_ip": "0.0.0.0",
                 "to_ip_prefix": 0,
-                "to_port_ranges": [
-                    {
-                        "end": 61000,
-                        "start": 60000
-                    }
+                "to_ports": [
+                    2020
                 ],
                 "to_service": null,
-                "to_transport": "tcp"
+                "to_transport": "any"
             },
             {
                 "action": "ALLOW",
@@ -112,14 +110,11 @@
                 "to_interface": "any",
                 "to_ip": "0.0.0.0",
                 "to_ip_prefix": 0,
-                "to_port_ranges": [
-                    {
-                        "end": 61000,
-                        "start": 60000
-                    }
+                "to_ports": [
+                    2020
                 ],
                 "to_service": null,
-                "to_transport": "tcp"
+                "to_transport": "udp"
             }
         ]
 
@@ -132,17 +127,18 @@
         that: "(ufw_rules.rules | difference(ufw_rules_expected)) == []"
         msg: "Failed difference: {{ (ufw_rules.rules | difference(ufw_rules_expected)) }}"
 
-
-    - name: Allow access to port range only for a given set of IN ips
+    - name: Allow access to port 2020 only for a given set of IN ips
       ansible.builtin.include_role:
         name: youtous.ufw_smart_rules
       vars:
         ufw_rule_parameters:
-          to_port: "60000:61000"
+          to_port: "2020"
           rule: "allow"
-          proto: "tcp"
+          direction: in
+          comment: "Expected comment"
         ufw_rules_criteria: from_ips
         ufw_rule_from_ips:
           - "172.16.0.0/12" # an allowed source to access
           - "8.5.5.6" # an allowed source to access
+          - "1.2.3.5" # an allowed source to access
 ...

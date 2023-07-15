@@ -65,6 +65,8 @@ Installation from [ansible galaxy](https://galaxy.ansible.com/youtous/ufw_smart_
     ufw_rule_to_ips: [10.1.3.63, 10.2.35.21] # ufw module implementation of to_ip
 ```
 
+**Notice :** if you are implementing a rule with a comment, this role does not handle replacing the others rules matching the same ip with the new commented rule. Test case "test-with-existing-rule-in-comment-no-delete" describes the scenario.
+
 ### License
 
 MIT
