@@ -3,8 +3,8 @@ TODO: tests that must be implemented
 - test with no existing rule - out : OK
 - test with existing rule are deleted - in : OK
 - test with existing rule are deleted - out : OK
-- test with existing rule are deleted and no delete - in
-- test with existing rule are deleted and no delete - in
+- test with existing rule are deleted and no delete - in : OK
+- test with existing rule are deleted and no delete - out : OK
 - test with port range with rules delete - in
 - test with port range with rules delete - out
 - test with port range with rules delete and no delete - in

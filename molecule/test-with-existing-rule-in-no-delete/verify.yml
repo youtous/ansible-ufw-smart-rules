@@ -1,0 +1,79 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+
+  tasks:
+    - name: List existing UFW rules
+      ansible.builtin.command: ufw status numbered
+      register: ufw_status
+      changed_when: false
+
+    - name: Retrieve ufw state and set expected state
+      ansible.builtin.set_fact:
+        ufw_rules: "{{ ufw_status.stdout | community.general.jc('ufw') }}"
+        ufw_rules_expected:
+          [
+                {
+                    "action": "ALLOW",
+                    "action_direction": "IN",
+                    "comment": null,
+                    "from_interface": "any",
+                    "from_ip": "8.5.5.6",
+                    "from_ip_prefix": 32,
+                    "from_port_ranges": [
+                        {
+                            "end": 65535,
+                            "start": 0
+                        }
+                    ],
+                    "from_service": null,
+                    "from_transport": "any",
+                    "index": 1,
+                    "network_protocol": "ipv4",
+                    "to_interface": "any",
+                    "to_ip": "0.0.0.0",
+                    "to_ip_prefix": 0,
+                    "to_ports": [
+                        2020
+                    ],
+                    "to_service": null,
+                    "to_transport": "any"
+                },
+                {
+                    "action": "ALLOW",
+                    "action_direction": "IN",
+                    "comment": null,
+                    "from_interface": "any",
+                    "from_ip": "172.16.0.0",
+                    "from_ip_prefix": 12,
+                    "from_port_ranges": [
+                        {
+                            "end": 65535,
+                            "start": 0
+                        }
+                    ],
+                    "from_service": null,
+                    "from_transport": "any",
+                    "index": 2,
+                    "network_protocol": "ipv4",
+                    "to_interface": "any",
+                    "to_ip": "0.0.0.0",
+                    "to_ip_prefix": 0,
+                    "to_ports": [
+                        2020
+                    ],
+                    "to_service": null,
+                    "to_transport": "any"
+                }
+            ]
+
+    - name: Display ufw state
+      ansible.builtin.debug:
+        msg: "{{ ufw_rules.rules }}"
+
+    - name: Ensure no difference in expected and current state
+      ansible.builtin.assert:
+        that: "(ufw_rules.rules | difference(ufw_rules_expected)) == []"
+        msg: "Failed difference: {{ (ufw_rules.rules | difference(ufw_rules_expected)) }}"
