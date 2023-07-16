@@ -1,5 +1,5 @@
 # youtous/ansible-ufw-smart-rules
-[![pipeline status](https://gitlab.com/youtous/ansible-ufw-smart-rules/badges/master/pipeline.svg)](https://gitlab.com/youtous/ansible-ufw-smart-rules/-/commits/master)
+[![pipeline status](https://gitlab.com/youtous/ansible-ufw-smart-rules/badges/main/pipeline.svg)](https://gitlab.com/youtous/ansible-ufw-smart-rules/-/commits/master)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![GitHub Repo stars](https://img.shields.io/github/stars/youtous/ansible-ufw-smart-rules?label=✨%20youtous%2Fansible-ufw-smart-rules&style=social)](https://github.com/youtous/ansible-ufw-smart-rules/)
 [![Gitlab Repo](https://img.shields.io/badge/gitlab.com%2Fyoutous%2Fansible--ufw--smart--rules?label=✨%20youtous%2Fansible-ufw-smart-rules&style=social&logo=gitlab)](https://gitlab.com/youtous/ansible-ufw-smart-rules/)
