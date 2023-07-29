@@ -39,7 +39,8 @@ Installation from [ansible galaxy](https://galaxy.ansible.com/youtous/ufw_smart_
 - Incoming filter:
 ```yaml
 - name: Implement an incoming filter on port 80, ensure only allowed ips can reach the service
-  ansible.builtin.include_role:
+  become: true
+  ansible.builtin.import_role:
     name: youtous.ufw_smart_rules
   vars:
     ufw_rule_parameters:
@@ -52,7 +53,8 @@ Installation from [ansible galaxy](https://galaxy.ansible.com/youtous/ufw_smart_
 - Outgoing filter:
 ```yaml
 - name: Implement an outgoing filter on port 80, ensure only allowed ips can be reached
-  ansible.builtin.include_role:
+  become: true
+  ansible.builtin.import_role:
     name: youtous.ufw_smart_rules
   vars:
     ufw_rule_parameters:
